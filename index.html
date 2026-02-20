@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบเว็บสื่อการเรียนรู้ออนไลน์</title>
+    <link rel="stylesheet" href="style.css?v=10">
+</head>
+
+<body>
+    <!-- Background elements are handled by CSS body::before/after -->
+    <div class="bg-shape"
+        style="top: 20%; left: 10%; width: 200px; height: 200px; background: rgba(236, 72, 153, 0.4);"></div>
+    <div class="bg-shape"
+        style="bottom: 10%; right: 10%; width: 300px; height: 300px; background: rgba(99, 102, 241, 0.4); animation-direction: reverse;">
+    </div>
+
+    <div class="container">
+        <header>
+            <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี" class="logo">
+            <h1>📚 ระบบเว็บสื่อการเรียนรู้ออนไลน์</h1>
+            <div id="userInfo" style="margin-top: 10px; font-size: 14px; color: var(--secondary-color);"></div>
+        </header>
+
+        <div id="homePage">
+            <div class="card" style="text-align: center;">
+                <!-- Centered card content with Glassmorphism -->
+                <h2>
+                    🎉 ยินดีต้อนรับสู่หลักสูตร
+                </h2>
+                <h3>
+                    เพชรบุรีเมืองอาหาร สืบสานศิลป์สกุลช่าง
+                </h3>
+
+                <div
+                    style="text-align: left; max-width: 600px; margin: 30px auto; background: rgba(255, 255, 255, 0.45); padding: 30px; border-radius: 20px; border: 2px solid rgba(236, 72, 153, 0.4); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15);">
+                    <h4 style="margin-bottom: 20px; color: var(--primary-color);">🎯 เป้าหมายการเรียนรู้:</h4>
+                    <ul style="line-height: 2.2; list-style: none; padding-left: 0;">
+                        <li>✨ เข้าใจอัตลักษณ์เพชรบุรีเมืองอาหาร (City of Gastronomy)</li>
+                        <li>✨ เรียนรู้ภูมิปัญญาและงานสกุลช่างเมืองเพชร 14 แขนง</li>
+                        <li>✨ สืบสานวัฒนธรรมและประเพณีท้องถิ่น</li>
+                        <li>✨ ตระหนักถึงคุณค่าของมรดกทางวัฒนธรรม</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <button class="btn btn-success" onclick="window.location.href='register.html'">
+                        🚀 เริ่มเรียนเลย
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="visitor-counter" id="visitorCounter">
+            <div class="visitor-counter-inner">
+                <span class="visitor-icon">👥</span>
+                <div class="visitor-stats">
+                    <div class="visitor-stat">
+                        <span class="visitor-label">ผู้เข้าชมทั้งหมด</span>
+                        <span class="visitor-number" id="totalVisitors">-</span>
+                    </div>
+                    <div class="visitor-divider"></div>
+                    <div class="visitor-stat">
+                        <span class="visitor-label">วันนี้</span>
+                        <span class="visitor-number" id="todayVisitors">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>© 2026 ระบบสื่อการเรียนรู้ออนไลน์ | <a href="credits.html">คณะผู้จัดทำ</a></p>
+    </footer>
+    </div>
+
+    <script>
+        // Visitor Counter
+        (function () {
+            fetch('counter.php?action=count')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    document.getElementById('totalVisitors').textContent = data.total.toLocaleString();
+                    document.getElementById('todayVisitors').textContent = data.today.toLocaleString();
+                })
+                .catch(function () {
+                    document.getElementById('visitorCounter').style.display = 'none';
+                });
+        })();
+    </script>
+</body>
+
+</html>

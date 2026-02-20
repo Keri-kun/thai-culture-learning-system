@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผู้จัดทำ - ระบบเว็บสื่อการเรียนรู้ออนไลน์</title>
+    <link rel="stylesheet" href="style.css?v=10">
+    <style>
+        .credits-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .team-section {
+            margin-top: 40px;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow-md);
+        }
+
+        .university-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .main-footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+
+        .main-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .main-footer a:hover {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background elements -->
+    <div class="bg-shape"
+        style="top: 20%; left: 10%; width: 200px; height: 200px; background: rgba(236, 72, 153, 0.4);"></div>
+    <div class="bg-shape"
+        style="bottom: 10%; right: 10%; width: 300px; height: 300px; background: rgba(99, 102, 241, 0.4); animation-direction: reverse;">
+    </div>
+
+    <div class="container">
+        <!-- Back Button Top Left -->
+        <a href="index.html"
+            style="position: absolute; top: 20px; left: 20px; text-decoration: none; font-size: 24px;">⬅️</a>
+
+        <header>
+            <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี" class="logo">
+            <h1>✨ ผู้จัดทำ</h1>
+            <p style="color: var(--secondary-color); margin-top: 10px;">ระบบเว็บสื่อการเรียนรู้ออนไลน์
+                "เพชรบุรีเมืองอาหาร"</p>
+        </header>
+
+        <div class="card credits-container">
+            <div class="team-section">
+                <!-- University Info -->
+                <div style="margin-bottom: 40px;">
+                    <div style="font-size: 60px; margin-bottom: 10px;">🎓</div>
+                    <h3 style="margin-top: 10px; color: var(--primary-color);">มหาวิทยาลัยราชภัฏเพชรบุรี</h3>
+                    <p style="color: var(--secondary-color); font-size: 18px; font-weight: bold; margin-bottom: 5px;">
+                        คณะเทคโนโลยีสารสนเทศ</p>
+                    <p style="color: var(--text-color);">สาขาวิชาวิทยาการคอมพิวเตอร์และเทคโนโลยีดิจิทัล
+                        <br>(แขนงวิชาเว็บและมัลติมีเดีย)
+                    </p>
+                </div>
+
+                <hr style="border: 0; height: 1px; background: rgba(0,0,0,0.1); margin: 30px 0;">
+
+                <h4 style="margin-bottom: 25px; color: var(--secondary-color);">นักศึกษาฝึกงาน ปี 2569</h4>
+
+                <!-- Student 1 -->
+                <div class="team-card">
+                    <span class="role-badge">ผู้พัฒนา (Developer)</span>
+                    <h4 style="font-size: 22px; margin-bottom: 10px; color: var(--text-color); margin-top: 10px;">
+                        นาย วิทย์สุพกิจ บุญวานิช</h4>
+                    <p style="color: var(--text-muted);">รหัสนักศึกษา: 654274115</p>
+                </div>
+
+                <!-- Student 2 -->
+                <div class="team-card">
+                    <span class="role-badge">ผู้ช่วยและทดสอบระบบเบื้องต้น</span>
+                    <h4 style="font-size: 22px; margin-bottom: 10px; color: var(--text-color); margin-top: 10px;">
+                        นางสาว รัษฎาภรณ์ เกตุแก้ว</h4>
+                    <p style="color: var(--text-muted);">รหัสนักศึกษา: 654274105</p>
+                </div>
+
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-success" onclick="window.location.href='index.html'">
+                        🏠 กลับสู่หน้าหลัก
+                    </button>
+                </div>
+            </div>
+
+            <footer class="main-footer">
+                <p>© 2026 ระบบสื่อการเรียนรู้ออนไลน์ | <a href="credits.html">คณะผู้จัดทำ</a></p>
+            </footer>
+        </div>
+</body>
+
+</html>

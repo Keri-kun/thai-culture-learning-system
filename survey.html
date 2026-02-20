@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบสอบถาม - ระบบเว็บสื่อการเรียนรู้ออนไลน์</title>
+    <link rel="stylesheet" href="style.css?v=10">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี" class="logo">
+            <h1>📚 ระบบเว็บสื่อการเรียนรู้ออนไลน์</h1>
+            <div id="userInfo" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+        </header>
+
+        <div id="surveyPage">
+            <div class="card">
+                <h2>📊 แบบสอบถามความพึงพอใจ</h2>
+                <div id="surveyContent"></div>
+            </div>
+        </div>
+        <footer class="main-footer">
+            <p>© 2026 ระบบสื่อการเรียนรู้ออนไลน์ | <a href="credits.html">คณะผู้จัดทำ</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Check for user data
+        const userDataStr = localStorage.getItem('userData');
+        if (!userDataStr) {
+            window.location.href = 'index.html';
+        }
+        const userData = JSON.parse(userDataStr);
+        document.getElementById('userInfo').textContent = `ผู้เรียน: ${userData.name}`;
+
+        let surveyAnswers = {};
+        const surveyQuestions = [
+            { id: 1, question: "ความพึงพอใจต่อเนื้อหาบทเรียนโดยรวม", type: "rating", required: true },
+            { id: 2, question: "ความเหมาะสมของระดับความยากของเนื้อหา", type: "rating", required: true },
+            { id: 3, question: "คุณภาพของสื่อและวัสดุการเรียนการสอน", type: "rating", required: true },
+            { id: 4, question: "ประโยชน์ของแบบทดสอบต่อความเข้าใจเนื้อหา", type: "rating", required: true },
+            { id: 5, question: "จำนวนคำถามในแบบทดสอบมีความเพียงพอ", type: "yesno", required: true },
+            { id: 6, question: "สิ่งที่ควรปรับปรุงหรือแก้ไขเพิ่มเติม", type: "text", required: false },
+            { id: 7, question: "ใช้เวลาเรียนทั้งหมดกี่นาที?", type: "number", required: false },
+            { id: 8, question: "โอกาสในการนำความรู้ไปประยุกต์ใช้ในงานจริง", type: "rating", required: true },
+            { id: 9, question: "ความสอดคล้องของคะแนนที่ได้กับระดับความเข้าใจ", type: "rating", required: true },
+            { id: 10, question: "ความสะดวกและรวดเร็วของกระบวนการลงทะเบียน", type: "rating", required: true },
+            { id: 11, question: "ปัญหาทางเทคนิคที่พบระหว่างการใช้งาน", type: "text", required: false },
+
+            { id: 13, question: "หัวข้อหรือเนื้อหาที่ต้องการให้เพิ่มเติม", type: "text", required: false },
+            { id: 14, question: "ความพึงพอใจต่อความเร็วในการโหลดหน้าเว็บ", type: "rating", required: true },
+            { id: 15, question: "คำแนะนำหรือข้อเสนอแนะเพิ่มเติม", type: "text", required: false }
+        ];
+
+        function renderSurvey() {
+            let html = '<p style="color: #666; margin-bottom: 20px;">📌 กรุณาตอบคำถามที่มีเครื่องหมาย * (จำเป็น)</p>';
+            surveyQuestions.forEach((q, i) => {
+                html += '<div style="margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #e2e8f0;" data-survey-id="' + q.id + '">';
+                html += '<p style="font-weight: 600; margin-bottom: 15px;">ข้อ ' + (i + 1) + '. ' + q.question + ' ' + (q.required ? '<span style="color: red;">*</span>' : '') + '</p>';
+
+                if (q.type === 'rating') {
+                    html += '<div class="rating-buttons">';
+                    for (let r = 1; r <= 5; r++) {
+                        html += '<button class="rating-btn" onclick="selectRating(' + q.id + ',' + r + ')" data-rating-id="' + q.id + '" data-value="' + r + '">' + r + '</button>';
+                    }
+                    html += '</div>';
+                    html += '<div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 12px; color: #666;"><span>น้อยที่สุด</span><span>มากที่สุด</span></div>';
+                } else if (q.type === 'yesno') {
+                    html += '<div style="display: flex; gap: 10px;">';
+                    html += '<button class="btn" onclick="selectYesNo(' + q.id + ',\'yes\')" data-yesno-id="' + q.id + '" data-value="yes">ใช่</button>';
+                    html += '<button class="btn" onclick="selectYesNo(' + q.id + ',\'no\')" data-yesno-id="' + q.id + '" data-value="no">ไม่</button>';
+                    html += '</div>';
+                } else if (q.type === 'text') {
+                    html += '<textarea id="survey' + q.id + '" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit;" rows="3" placeholder="กรุณากรอกคำตอบ..."></textarea>';
+                } else if (q.type === 'number') {
+                    html += '<input type="number" id="survey' + q.id + '" min="0" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px;" placeholder="กรุณากรอกตัวเลข">';
+                } else if (q.type === 'choice') {
+                    q.options.forEach(opt => {
+                        html += '<div class="quiz-option" onclick="selectChoice(' + q.id + ',\'' + opt + '\')" data-choice-id="' + q.id + '" data-value="' + opt + '"><input type="radio" name="survey' + q.id + '" style="margin-right: 10px;" disabled>' + opt + '</div>';
+                    });
+                }
+                html += '</div>';
+            });
+            html += '<button class="btn btn-success" style="width: 100%;" onclick="submitSurvey()">ส่งแบบสอบถามและรับเกียรติบัตร</button>';
+            document.getElementById('surveyContent').innerHTML = html;
+        }
+
+        function selectRating(qId, rating) {
+            surveyAnswers[qId] = rating;
+            const btns = document.querySelectorAll('[data-rating-id="' + qId + '"]');
+            btns.forEach(btn => {
+                if (btn.dataset.value == rating) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function selectYesNo(qId, val) {
+            surveyAnswers[qId] = val;
+            const btns = document.querySelectorAll('[data-yesno-id="' + qId + '"]');
+            btns.forEach(btn => {
+                if (btn.dataset.value == val) {
+                    btn.style.background = '#667eea';
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }
+            });
+        }
+
+        function selectChoice(qId, val) {
+            surveyAnswers[qId] = val;
+            const opts = document.querySelectorAll('[data-choice-id="' + qId + '"]');
+            opts.forEach(opt => {
+                if (opt.dataset.value == val) {
+                    opt.classList.add('selected');
+                    opt.querySelector('input').checked = true;
+                } else {
+                    opt.classList.remove('selected');
+                    opt.querySelector('input').checked = false;
+                }
+            });
+        }
+
+        function submitSurvey() {
+            surveyQuestions.forEach(q => {
+                if (q.type === 'text' || q.type === 'number') {
+                    const inp = document.getElementById('survey' + q.id);
+                    if (inp && inp.value.trim()) {
+                        surveyAnswers[q.id] = inp.value.trim();
+                    }
+                }
+            });
+
+            const requiredQuestions = surveyQuestions.filter(q => q.required);
+            const missingRequired = requiredQuestions.filter(q => !surveyAnswers[q.id]);
+
+            if (missingRequired.length > 0) {
+                const missingNumbers = missingRequired.map(q => surveyQuestions.indexOf(q) + 1).join(', ');
+                alert('กรุณาตอบคำถามที่จำเป็น (มีเครื่องหมาย *)\nคำถามที่ยังไม่ได้ตอบ: ข้อ ' + missingNumbers);
+
+                missingRequired.forEach(q => {
+                    const div = document.querySelector('[data-survey-id="' + q.id + '"]');
+                    if (div) {
+                        div.style.background = '#fff5f5';
+                        setTimeout(() => { div.style.background = ''; }, 2000);
+                    }
+                });
+                return;
+            }
+
+            // Redirect to certificate
+            window.location.href = 'certificate.html';
+        }
+
+        renderSurvey();
+    </script>
+</body>
+
+</html>

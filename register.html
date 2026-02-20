@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียนเรียน - ระบบเว็บสื่อการเรียนรู้ออนไลน์</title>
+    <link rel="stylesheet" href="style.css?v=10">
+</head>
+
+<body>
+    <!-- Animated Background Shapes -->
+    <div class="bg-shape"
+        style="top: 10%; right: 10%; width: 250px; height: 250px; background: rgba(99, 102, 241, 0.5);"></div>
+    <div class="bg-shape"
+        style="bottom: 20%; left: 10%; width: 300px; height: 300px; background: rgba(236, 72, 153, 0.5); animation-delay: -5s;">
+    </div>
+
+    <div class="container">
+        <header>
+            <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี" class="logo">
+            <h1>📚 ระบบเว็บสื่อการเรียนรู้ออนไลน์</h1>
+        </header>
+
+        <div id="registerPage">
+            <div class="card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+                <h2 style="text-align: center; margin-bottom: 30px; border-bottom: none; font-size: 28px;">📝
+                    ลงทะเบียนเรียน</h2>
+
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label style="color: var(--secondary-color);">ชื่อ-นามสกุล <span
+                                style="color: var(--accent-color);">*</span></label>
+                        <input type="text" id="userName" required placeholder="กรอกชื่อ-นามสกุลจริงเพื่อออกเกียรติบัตร"
+                            style="background: rgba(255,255,255,0.9);">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="color: var(--secondary-color);">อีเมล <span
+                                style="color: var(--accent-color);">*</span></label>
+                        <input type="email" id="userEmail" required placeholder="example@email.com"
+                            style="background: rgba(255,255,255,0.9);">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="color: var(--secondary-color);">สถานศึกษา / องค์กร</label>
+                        <input type="text" id="userOrg" placeholder="ระบุชื่อโรงเรียน หรือหน่วยงาน"
+                            style="background: rgba(255,255,255,0.9);">
+                    </div>
+
+                    <button type="submit" class="btn btn-success"
+                        style="width: 100%; margin-top: 10px; font-size: 18px;">
+                        เข้าสู่บทเรียน 🚀
+                    </button>
+
+                    <p style="text-align: center; margin-top: 20px; color: var(--text-muted); font-size: 14px;">
+                        * ข้อมูลนี้จะถูกนำไปแสดงในเกียรติบัตร กรุณาตรวจสอบความถูกต้อง
+                    </p>
+                </form>
+            </div>
+        </div>
+        <footer class="main-footer">
+            <p>© 2026 ระบบสื่อการเรียนรู้ออนไลน์ | <a href="credits.html">คณะผู้จัดทำ</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const org = document.getElementById('userOrg').value.trim();
+
+            if (name.length < 2) {
+                alert('กรุณากรอกชื่อ-นามสกุลให้ถูกต้อง (อย่างน้อย 2 ตัวอักษร)');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                alert('กรุณากรอกอีเมลให้ถูกต้อง');
+                return;
+            }
+
+            const userData = {
+                name: name,
+                email: email,
+                organization: org
+            };
+
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            // Redirect to lesson page
+            window.location.href = 'lesson.html';
+        }
+    </script>
+</body>
+
+</html>

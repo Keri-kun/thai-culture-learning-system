@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกียรติบัตร - ระบบเว็บสื่อการเรียนรู้ออนไลน์</title>
+    <link rel="stylesheet" href="style.css?v=10">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="js/config.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // Initialize EmailJS with Public Key from config.js
+            // We verify if config is loaded to prevent errors if user hasn't set it up yet
+            if (typeof EMAILJS_CONFIG !== 'undefined' && EMAILJS_CONFIG.PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+                emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี" class="logo">
+            <h1
+                style="background: var(--modern-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">
+                📚 ระบบเว็บสื่อการเรียนรู้ออนไลน์</h1>
+            <div id="userInfo"
+                style="margin-top: 10px; font-size: 16px; color: var(--secondary-color); font-weight: 500;"></div>
+        </header>
+
+        <div id="certificatePage">
+            <div class="card" style="padding: 40px; text-align: center;">
+                <h2 style="text-align: center; margin-bottom: 30px; border-bottom: none; font-size: 28px;">🎉 ยินดีด้วย!
+                    คุณผ่านหลักสูตร</h2>
+
+                <!-- A4 Landscape Certificate (297mm × 210mm) - Elegant Style -->
+                <div class="certificate" style="
+                    width: 297mm; 
+                    height: 210mm; 
+                    margin: 0 auto; 
+                    padding: 0;
+                    position: relative;
+                    /* Background and styling handled by CSS class .certificate for consistency */
+                ">
+                    <!-- Decorative Border (Inner Gold Line) - specific to HTML structure not easily done in CSS pseudo-element if we want exact 4mm offset easily */ -->
+                    <div style="
+                        position: absolute;
+                        top: 4mm;
+                        left: 4mm;
+                        right: 4mm;
+                        bottom: 4mm;
+                        border: 3px double #c5a059;
+                        pointer-events: none;
+                    "></div>
+
+                    <!-- Main Content - Centered -->
+                    <div style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: flex-start;
+                        height: 100%;
+                        padding: 15mm 20mm;
+                        padding-top: 10mm; /* Adjusted padding */
+                        text-align: center;
+                        box-sizing: border-box;
+                    ">
+
+                        <!-- Logo -->
+                        <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี"
+                            style="width: 100px; height: auto; margin-bottom: 20px;">
+
+                        <!-- Title -->
+                        <!-- Overriding global h2 styles: using inline-style to reset background and color -->
+                        <h2 style="
+                            font-size: 32px; 
+                            margin: 0 0 10px 0; 
+                            color: #000000 !important; /* Force Black */
+                            font-weight: 600;
+                            line-height: 1.4;
+                            letter-spacing: 0.5px;
+                            background: none !important; /* Remove gradient background */
+                            -webkit-background-clip: border-box !important;
+                            background-clip: border-box !important;
+                            -webkit-text-fill-color: #000000 !important;
+                            border: none !important;
+                            display: block !important;
+                            padding: 0;
+                            text-shadow: none !important;
+                        ">สำนักงานวัฒนธรรมจังหวัดเพชรบุรี</h2>
+
+                        <p style="font-size: 20px; color: #333333; margin: 0 0 20px 0; font-weight: 400;">
+                            ขอมอบประกาศนียบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า
+                        </p>
+
+                        <!-- Divider Line (Optional - keeping as it adds formal touch, user didn't object) -->
+                        <div
+                            style="width: 60%; height: 2px; background-color: #c5a059; margin-bottom: 30px; border-radius: 2px; opacity: 0.8;">
+                        </div>
+
+
+                        <!-- Name -->
+                        <div id="certName" style="
+                            font-size: 42px; 
+                            font-weight: 700; 
+                            color: #000000 !important; /* Force Black */
+                            margin: 0 0 20px 0;
+                            min-height: 50px;
+                            letter-spacing: 0.5px;
+                        "></div>
+
+                        <!-- Content -->
+                        <p
+                            style="font-size: 18px; color: #333333; margin: 0 0 15px 0; line-height: 1.6; font-weight: 400;">
+                            ได้ผ่านการพัฒนาองค์ความรู้เรื่อง <strong
+                                style="color: var(--gold-color); font-weight: 600;">"เพชรบุรีเมืองอาหาร
+                                และการสืบสานงานสกุลช่าง"</strong>
+                        </p>
+
+
+
+                        <p style="font-size: 16px; color: #666; margin: 0 0 30px 0; font-weight: 300;">
+                            ให้ไว้ ณ วันที่ <span id="certDate" style="display: inline;"></span>
+                        </p>
+
+
+
+                        <!-- Signature -->
+                        <div style="position: absolute; bottom: 22mm; left: 0; width: 100%; text-align: center;">
+                            <!-- Space for Signature Image -->
+                            <div
+                                style="height: 80px; margin-bottom: 5px; display: flex; align-items: flex-end; justify-content: center;">
+                                <!-- ใส่รูปไฟล์ลายเซ็นที่นี่ (เปลี่ยนชื่อไฟล์ signature.png เป็นไฟล์ของคุณ) -->
+                                <img src="signature.png" alt="ลายเซ็น" style="max-height: 85px; width: auto;">
+                            </div>
+                            <p style="font-size: 18px; color: #000; margin: 0 0 5px 0; font-weight: 600;">
+                                (นางกัญญพัชร นางาม)
+                            </p>
+                            <p style="font-size: 16px; color: #444; margin: 0; font-weight: 400;">
+                                วัฒนธรรมจังหวัดเพชรบุรี
+                            </p>
+                        </div>
+
+                        <!-- Certificate ID - Pinned to Bottom -->
+                        <div style="position: absolute; bottom: 12mm; width: 100%; text-align: center;">
+                            <p
+                                style="margin: 0; color: #999; font-size: 10px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase;">
+                                รหัสยืนยัน: <strong id="certId" style="color: #666; font-weight: 500;"></strong>
+                            </p>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="downloadCertificate()">
+                        ดาวน์โหลดเกียรติบัตร
+                    </button>
+                    <button class="btn" onclick="window.location.href='index.html'">
+                        กลับหน้าหลัก
+                    </button>
+                </div>
+            </div>
+        </div>
+        <footer class="main-footer">
+            <p>© 2026 ระบบสื่อการเรียนรู้ออนไลน์ | <a href="credits.html">คณะผู้จัดทำ</a></p>
+        </footer>
+    </div>
+
+    <style>
+        /* Modern Notification Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal {
+            background: rgba(255, 255, 255, 0.95);
+            width: 400px;
+            max-width: 90%;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-overlay.show .custom-modal {
+            transform: translateY(0);
+        }
+
+        .custom-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gold-gradient);
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff3cd;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(212, 167, 44, 0.2);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: #333;
+        }
+    </style>
+
+    <!-- Custom Notification Modal -->
+    <div id="notificationModal" class="modal-overlay">
+        <div class="custom-modal">
+            <div class="modal-icon" id="modalIcon">⚠️</div>
+            <h3 class="modal-title" id="modalTitle">แจ้งเตือน</h3>
+            <p class="modal-message" id="modalMessage">ข้อความแจ้งเตือน</p>
+            <button class="modal-btn" onclick="closeNotification()">รับทราบ</button>
+        </div>
+    </div>
+
+    <script>
+        // Check for user data
+        const userDataStr = localStorage.getItem('userData');
+        if (!userDataStr) {
+            window.location.href = 'index.html';
+        }
+        const userData = JSON.parse(userDataStr);
+        document.getElementById('userInfo').textContent = `ผู้เรียน: ${userData.name}`;
+
+        // Check for score
+        const quizScore = localStorage.getItem('quizScore') || '100'; // Default to 100 if missing for some reason
+
+        function showNotification(title, message, icon = '⚠️') {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('notificationModal').classList.add('show');
+        }
+
+        function closeNotification() {
+            document.getElementById('notificationModal').classList.remove('show');
+        }
+
+        function showCertificate() {
+            document.getElementById('certName').textContent = userData.name;
+
+            const today = new Date();
+            const day = today.getDate();
+            const month = today.toLocaleDateString('th-TH', { month: 'long' });
+            const year = today.getFullYear() + 543;
+            document.getElementById('certDate').textContent = `${day} ${month} พ.ศ. ${year}`;
+
+            const certId = 'CERT-' + today.getFullYear() +
+                String(today.getMonth() + 1).padStart(2, '0') +
+                String(today.getDate()).padStart(2, '0') + '-' +
+                Math.random().toString(36).substr(2, 9).toUpperCase();
+            document.getElementById('certId').textContent = certId;
+        }
+
+        function downloadCertificate() {
+            // Display loading
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'กำลังสร้าง PDF...';
+            btn.disabled = true;
+
+            generatePDF().then(pdf => {
+                const fileName = `Certificate_${userData.name.replace(/\s+/g, '_')}_${document.getElementById('certId').textContent}.pdf`;
+                pdf.save(fileName);
+                showNotification(
+                    'ดาวน์โหลดสำเร็จ',
+                    `บันทึกไฟล์เกียรติบัตรเรียบร้อยแล้ว\nไฟล์: ${fileName}`,
+                    '✅'
+                );
+            }).catch(error => {
+                console.error('Error generating certificate:', error);
+                showNotification(
+                    'เกิดข้อผิดพลาด',
+                    'ไม่สามารถสร้างเกียรติบัตรได้ กรุณาลองใหม่อีกครั้ง',
+                    '❌'
+                );
+            }).finally(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function generatePDF() {
+            return new Promise((resolve, reject) => {
+                // Hide buttons temporarily
+                const buttons = document.querySelector('#certificatePage .card > div:last-child');
+                buttons.style.display = 'none';
+
+                const certificate = document.querySelector('.certificate');
+
+                // Force images to load before capturing
+                const images = certificate.getElementsByTagName('img');
+                const promises = [];
+                for (let img of images) {
+                    if (!img.complete) {
+                        promises.push(new Promise(resolveLoad => {
+                            img.onload = resolveLoad;
+                            img.onerror = resolveLoad;
+                        }));
+                    }
+                }
+
+                Promise.all(promises).then(() => {
+                    html2canvas(certificate, {
+                        scale: 3, // High quality scale
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: false,
+                        windowWidth: certificate.scrollWidth,
+                        windowHeight: certificate.scrollHeight
+                    }).then(canvas => {
+                        try {
+                            // High quality Image
+                            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                            const pdf = new window.jspdf.jsPDF({
+                                orientation: 'landscape',
+                                unit: 'mm',
+                                format: 'a4'
+                            });
+
+                            const pdfWidth = pdf.internal.pageSize.getWidth();
+                            const pdfHeight = pdf.internal.pageSize.getHeight();
+                            const imgRatio = canvas.width / canvas.height;
+                            const pdfRatio = pdfWidth / pdfHeight;
+
+                            let imgWidth, imgHeight, x, y;
+
+                            if (imgRatio > pdfRatio) {
+                                imgHeight = pdfHeight;
+                                imgWidth = pdfHeight * imgRatio;
+                                y = 0;
+                                x = (pdfWidth - imgWidth) / 2;
+                            } else {
+                                imgWidth = pdfWidth;
+                                imgHeight = pdfWidth / imgRatio;
+                                x = 0;
+                                y = (pdfHeight - imgHeight) / 2;
+                            }
+
+                            pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight);
+
+                            // Restore buttons
+                            buttons.style.display = 'flex';
+
+                            resolve(pdf);
+                        } catch (err) {
+                            buttons.style.display = 'flex';
+                            reject(err);
+                        }
+                    }).catch(error => {
+                        buttons.style.display = 'flex'; // Ensure restoration on canvas error
+                        reject(error);
+                    });
+                });
+            });
+        }
+
+        showCertificate();
+    </script>
+</body>
+
+</html>

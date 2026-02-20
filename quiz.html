@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบ - ระบบเว็บสื่อการเรียนรู้ออนไลน์</title>
+    <link rel="stylesheet" href="style.css?v=10">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="logo.png" alt="ตราประจำจังหวัดเพชรบุรี" class="logo">
+            <h1>📚 ระบบเว็บสื่อการเรียนรู้ออนไลน์</h1>
+            <div id="userInfo" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+        </header>
+
+        <div id="quizPage">
+            <div class="card">
+                <h2>📝 แบบทดสอบประเมินความรู้</h2>
+                <div id="quizContent"></div>
+                <div id="quizResult" class="hidden"></div>
+            </div>
+        </div>
+        <footer class="main-footer">
+            <p>© 2026 ระบบสื่อการเรียนรู้ออนไลน์ | <a href="credits.html">คณะผู้จัดทำ</a></p>
+        </footer>
+    </div>
+
+    <style>
+        /* Modern Notification Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal {
+            background: rgba(255, 255, 255, 0.95);
+            width: 400px;
+            max-width: 90%;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-overlay.show .custom-modal {
+            transform: translateY(0);
+        }
+
+        .custom-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gold-gradient);
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff3cd;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(212, 167, 44, 0.2);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: #333;
+        }
+    </style>
+
+    <!-- Custom Notification Modal -->
+    <div id="notificationModal" class="modal-overlay">
+        <div class="custom-modal">
+            <div class="modal-icon" id="modalIcon">⚠️</div>
+            <h3 class="modal-title" id="modalTitle">แจ้งเตือน</h3>
+            <p class="modal-message" id="modalMessage">ข้อความแจ้งเตือน</p>
+            <button class="modal-btn" onclick="closeNotification()">รับทราบ</button>
+        </div>
+    </div>
+
+    <script>
+        // Check for user data
+        const userDataStr = localStorage.getItem('userData');
+        if (!userDataStr) {
+            window.location.href = 'index.html';
+        }
+        const userData = JSON.parse(userDataStr);
+        document.getElementById('userInfo').textContent = `ผู้เรียน: ${userData.name}`;
+
+        let quizAnswers = {};
+        const quizQuestions = [
+            // 1. เมือง 3 รส
+            {
+                id: 1, question: "คำนิยามคำว่า “เมือง ๓ รส” ของจังหวัดเพชรบุรีมีรสชาติใดบ้าง และแต่ละรสชาติได้จากผลิตภัณฑ์ธรรมชาติจากอำเภอใด",
+                options: ["เปรี้ยวจากมะนาวแป้น (หนองหญ้าปล้อง) / หวานจากน้ำตาลโตนด (บ้านลาด)", "หวานจากน้ำตาลโตนด (บ้านลาด) / เค็มจากเกลือสมุทร (บ้านแหลม) / เปรี้ยวจากมะนาวแป้น (ท่ายาง)", "เปรี้ยวจากมะนาวแป้น (บ้านลาด) / หวานจากน้ำตาลโตนด (ท่ายาง)", "เค็มจากเกลือสมุทร (ชะอำ) / หวานจากน้ำตาลโตนด (ท่ายาง)"]
+                , correct: 1
+            },
+
+            // 2. อาหารเชิดชู 65
+            {
+                id: 2,
+                question: "อาหารประเภทใดของจังหวัดเพชรบุรี ที่ได้รับคัดเลือกเป็นเมนูเชิดชูอาหารถิ่น (1 Province 1 Menu) ประจำปี ๒๕๖๘",
+                options: ["แกงหลอก", "แกงส้มใบชะคราม", "แกงกระทือปลาดุกทะเล", "แกงหัวตาล (แกงหัวโหนด)"],
+                correct: 2
+            },
+
+            // 3. ไม่ใช่ชาติพันธุ์
+            {
+                id: 3, question: "จังหวัดเพชรบุรีมีความหลากหลายทางวัฒนธรรมและชาติพันธุ์ ข้อใดไม่ใช่ชาติพันธุ์ของจังหวัดเพชรบุรี",
+                options: ["ไทยลื้อ", "กะเหรี่ยง", "ไทยมุสลิม", "ไทยพวน"]
+                , correct: 0
+            },
+
+            // 4. แกงหน่อส้ม
+            {
+                id: 4, question: "“แกงหน่อส้ม” เป็นอาหารของชาติพันธุ์ใดของจังหวัดเพชรบุรี",
+                options: ["ไทยพื้นถิ่น", "ไทยเวียง", "มอญ", "ไทยทรงดำ"]
+                , correct: 3
+            },
+
+            // 5. ข้าวแช่
+            {
+                id: 5, question: "จาก “ข้าวแช่ชาววัง” สู่ “ข้าวแช่เมืองเพชร” เจ้าของต้นตำรับสำรับนี้คือใคร",
+                options: ["เจ้าจอมมารดากลิ่นในรัชกาลที่ ๒", "เจ้าจอมก๊กออ ในรัชกาลที่ ๕", "เจ้าจอมมารดาซ่อนกลิ่นในรัชกาลที่ ๔", "เจ้าจอมมารดาเอมในรัชกาลที่ ๔"]
+                , correct: 2
+            },
+
+            // 6. เมนูบ้านลาด
+            {
+                id: 6,
+                question: "อาหารประเภทใดของอำเภอบ้านลาด ที่ได้รับคัดเลือกเป็นเมนูเชิดชูอาหารถิ่น (1 Province 1 Menu)",
+                options: ["ยำหัวโหนด", "แกงส้มใบชะอม", "ต้มสีนวล", "แกงคั่วหัวตาล"],
+                correct: 3
+            },
+
+            // 7. เมนูบ้านแหลม
+            {
+                id: 7,
+                question: "อาหารประเภทใดของอำเภอบ้านแหลม ที่ได้รับคัดเลือกเป็นเมนูเชิดชูอาหารถิ่น (1 Province 1 Menu)",
+                options: ["น้ำพริกลำแพน", "แกงส้มชะอมกุ้งสด", "แกงส้มไข่ปลาริวกิว", "ยำใบชะคราม"],
+                correct: 0
+            },
+
+            // 8. น้ำพริก (ชาติพันธุ์)
+            {
+                id: 8, question: "“น้ำพริกดงคะบังข่า” เป็นอาหารของชาติพันธุ์ใดของจังหวัดเพชรบุรี",
+                options: ["ไทยพวน", "ไทยเวียง", "ไทยมุสลิม", "กะเหรี่ยง"],
+                correct: 3
+            },
+
+            // 9. ผัดไทย
+            {
+                id: 9, question: "“ผัดไทยเมืองเพชร” มีความแตกต่างจากผัดแไทยของจังหวัดอื่นอย่างไร",
+                options: ["การใช้เส้นเล็กสดผัดกับน้ำตาลมะพร้าวผสมน้ำตาลโตนด", "การใช้ถั่วบดผสมน้ำตาลโตนดผัดกับเส้นเล็ก", "การใช้เส้นเล็กสดผัดกับน้ำตาลโตนด", "การใช้น้ำมะขามเปียกผสมกับน้ำตาลโตนดผัดเส้นเล็ก"],
+                correct: 2
+            },
+
+            // 10. เมือง 3 วัง
+            {
+                id: 10, question: "คำนิยามคำว่า “เมือง ๓ วัง” ของจังหวัดเพชรบุรีมีวังใดบ้าง และแต่ละวังสร้างในรัชสมัยของพระมหากษัตริย์พระองค์ใด",
+                options: ["พระนครคีรี (ร.๔) / พระรามราชนิเวศน์ (ร.๕) / พระราชนิเวศน์มฤคทายวัน (ร.๖)", "พระนครคีรี (ร.๓) / พระรามราชนิเวศน์ (ร.๔) / พระราชนิเวศน์มฤคทายวัน (ร.๕)", "พระนครคีรี (ร.๕) / พระรามราชนิเวศน์ (ร.๖) / พระราชนิเวศน์มฤคทายวัน (ร.๗)", "พระที่นั่งรามราชนิเวศน์ (ร.๔) / พระนครคีรี (ร.๕) / พระราชนิเวศน์มฤคทายวัน (ร.๖)"],
+                correct: 0
+            },
+
+            // 11. แกงหลอก
+            {
+                id: 11, question: "“แกงหลอก” อาหารขึ้นชื่อของอำเภอบ้านลาด เหตุใดจึงมีชื่อว่า “แกงหลอก”",
+                options: ["ทำเพื่อหลอกเด็กว่าแกงนั้นไม่มีรสเผ็ด", "ไม่ใส่กะทิ แต่ใช้สีขาวจากไข่ขาวและเนื้อปลาต้มโขลก", "ทำเพื่อหัดเด็กให้กินเผ็ด", "ไม่มีข้อใดถูก"],
+                correct: 1
+            },
+
+            // 12. ท้าวทองกีบม้า
+            {
+                id: 12, question: "ท้าวทองกีบม้า หรือ ราชินีขนมไทย เป็นต้นตำรับอาหารขึ้นชื่อใดของจังหวัดเพชรบุรี",
+                options: ["ขนมหม้อแกงและขนมไข่เต่า", "ขนมสังขยาและขนมหม้อแกง", "ทองหยิบ ทองหยอด และขนมหม้อแกง", "ขนมหม้อแกงและขนมบ้าบิ่น"],
+                correct: 2
+            },
+
+            // 13. อยุธยาที่มีชีวิต
+            {
+                id: 13, question: "เหตุใดจังหวัดเพชรบุรี จึงได้รับสมญานามว่า “อยุธยาที่มีชีวิต (Living Ayutthaya)”",
+                options: ["จังหวัดเพชรบุรีเหมือนกับจังหวัดพระนครศรีอยุธยาทุกรูปแบบ", "จังหวัดเพชรบุรีมีมรดกทางภูมิปัญญาทางวัฒนธรรมที่ต่อเนื่องไม่มีขาดช่วงเหมือนในสมัยอยุธยา", "โบราณสถานและสถาปัตยกรรมโบราณของจังหวัดเพชรบุรียังมีการรักษาให้คงสภาพไว้ตลอดเหมือนในจังหวัดอยุธยา", "ไม่มีข้อใดถูกต้อง"],
+                correct: 1
+            },
+
+            // 14. ไม่ใช่สกุลช่าง
+            {
+                id: 14,
+                question: "ข้อใดไม่ใช่ประเภทของสกุลช่างเมืองเพชร",
+                options: ["งานตอกกระดาษ", "งานฝังมุก", "งานทักทอฝ้าย", "งานแกะสลักไม้"],
+                correct: 2
+            },
+
+            // 15. Banana Stalk
+            {
+                id: 15,
+                question: "Banana Stalk หมายถึงสกุลช่างเมืองเพชรประเภทใด",
+                options: ["งานแกะสลักกล้วยดิบ", "งานแทงหยวก", "งานประดับก้านกล้วย", "งานวาดลายต้นกล้วย"],
+                correct: 1
+            },
+
+            // 16. ศิลปินแห่งชาติ
+            {
+                id: 16,
+                question: "ศิลปินแห่งชาติ สาขาทัศนศิลป์ (ประณีตศิลป์-ศิลปะปูนปั้น) และเป็นปรมาจารย์ปูนปั้นเมืองเพชรบุรี คือท่านใด",
+                options: ["นายทองร่วง เอมโอษฐ", "นายชลิต เสริมปรุงสุข", "นางเนื่อง แฝงสีคำ", "นายช่วง มูลพินิจ"],
+                correct: 0
+            },
+
+            // 17. ทองโบราณ
+            {
+                id: 17,
+                question: "เอกลักษณ์ของการทำทองโบราณเพชรบุรีที่โดดเด่นกว่าช่างทองของจังหวัดอื่น ๆ คืออะไร",
+                options: ["ลวดลายแปลกไม่เหมือนที่ใด", "ได้รับการถ่ายทอดมาจากช่างทองหลวงในสมัยรัตนโกสินทร์ มีลวดลายของทองโบราณ", "ได้รับการถ่ายทอดมาจากช่างทองหลวงในสมัยศรีอยุธยา", "ไม่มีข้อใดถูกต้อง"],
+                correct: 1
+            },
+
+            // 18. งานจิตรกรรม
+            {
+                id: 18,
+                question: "งานจิตรกรรม (Murals) ของช่างสกุลเมืองเพชร บนผนังโบสถ์หรือพระอุโบสถของวัดต่าง ๆ ในจังหวัดเพชรบุรี ส่วนใหญ่จะสร้างสรรค์งานจิตรกรรมในเรื่องราวใด",
+                options: ["รามเกียรติ์", "พุทธประวัติ", "พุทธชาดก", "ภพภูมิต่าง ๆ ตามความเชื่อของพระพุทธศาสนา"],
+                correct: 2 // พุทธชาดก
+            },
+
+            // 19. ศิลปินแห่งชาติ
+            {
+                id: 19,
+                question: "ศิลปินแห่งชาติคนล่าสุด ซึ่งเป็นคนอำเภอบ้านแหลม จังหวัดเพชรบุรีคือใคร และท่านเป็นศิลปินแห่งชาติสาขาใด",
+                options: ["แดนไพร ลูกเพชร : เพลงไทยเดิม", "นายปัญญา วิจินธนสาร : จิตรกรรม", "นายช่วง มูลพินิจ: จิตรกรรม", "พันตรีประพัชศักดิ์ จันทร์เปล่ง : ศิลปะการแสดง(นักร้องเพลงลูกทุ่ง)"],
+                correct: 3 // พันตรีประพัชศักดิ์ จันทร์เปล่ง
+            },
+
+            // 20. หนังใหญ่
+            {
+                id: 20,
+                question: "สถานที่ใดของจังหวัดเพชรบุรี ที่ยังคงรักษาและมีการถ่ายทอดการเชิดหนังใหญ่",
+                options: ["วัดใหญ่สุวรรณาราม วรวิหาร", "วัดคงคาราม วรวิหาร", "วัดพลับพลาชัย", "วัดอัมพวัน"],
+                correct: 2 // วัดพลับพลาชัย
+            }
+        ];
+
+        function showNotification(title, message, icon = '⚠️') {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('notificationModal').classList.add('show');
+        }
+
+        function closeNotification() {
+            document.getElementById('notificationModal').classList.remove('show');
+        }
+
+        function renderQuiz() {
+            let html = '<p style="color: #666; margin-bottom: 20px;">📌 ต้องตอบถูก 12 ข้อขึ้นไปจาก 20 ข้อ จึงจะผ่าน</p>';
+            quizQuestions.forEach((q, i) => {
+                html += '<div style="margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #e2e8f0;">';
+                html += '<p style="font-weight: 600; font-size: 18px; margin-bottom: 15px;">ข้อ ' + (i + 1) + '. ' + q.question + '</p>';
+                q.options.forEach((opt, j) => {
+                    html += '<div class="quiz-option" onclick="selectAnswer(' + q.id + ',' + j + ')" data-qid="' + q.id + '" data-idx="' + j + '">';
+                    html += '<input type="radio" name="q' + q.id + '" style="margin-right: 10px;" disabled>' + opt;
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            });
+            html += '<button class="btn btn-success" style="width: 100%;" onclick="submitQuiz()">ส่งคำตอบ</button>';
+            document.getElementById('quizContent').innerHTML = html;
+        }
+
+        function selectAnswer(qId, optIdx) {
+            quizAnswers[qId] = optIdx;
+            const opts = document.querySelectorAll('[data-qid="' + qId + '"]');
+            opts.forEach(o => {
+                o.classList.remove('selected');
+                o.querySelector('input').checked = false;
+            });
+            const selected = document.querySelector('[data-qid="' + qId + '"][data-idx="' + optIdx + '"]');
+            selected.classList.add('selected');
+            selected.querySelector('input').checked = true;
+        }
+
+        function submitQuiz() {
+            const answeredCount = Object.keys(quizAnswers).length;
+            if (answeredCount < quizQuestions.length) {
+                showNotification(
+                    'ตอบคำถามไม่ครบถ้วน',
+                    `กรุณาตอบคำถามให้ครบทั้ง ${quizQuestions.length} ข้อ\n(คุณตอบไปแล้ว ${answeredCount} ข้อ)`,
+                    '📝'
+                );
+                return;
+            }
+
+            let correct = 0;
+            let results = [];
+            quizQuestions.forEach(q => {
+                const isCorrect = quizAnswers[q.id] === q.correct;
+                if (isCorrect) correct++;
+                results.push({
+                    question: q.question,
+                    yourAnswer: q.options[quizAnswers[q.id]],
+                    correctAnswer: q.options[q.correct],
+                    isCorrect: isCorrect
+                });
+            });
+
+            const quizScore = (correct / quizQuestions.length) * 100;
+
+            // Save score to localStorage
+            localStorage.setItem('quizScore', quizScore);
+
+            document.getElementById('quizContent').classList.add('hidden');
+            const isPass = correct >= 12;
+            let html = '<div class="score-display ' + (isPass ? 'score-pass' : 'score-fail') + '">' + correct + '/20 (' + quizScore.toFixed(0) + '%)</div>';
+            html += '<h3 style="text-align: center; margin-bottom: 20px;">' + (isPass ? '🎉 ยินดีด้วย! คุณผ่านการทดสอบ' : '😔 เสียใจด้วย คุณยังไม่ผ่านการทดสอบ') + '</h3>';
+            html += '<p style="text-align: center; margin-bottom: 30px; font-size: 18px;">ตอบถูก <strong style="color: #48bb78;">' + correct + '</strong> จาก <strong>' + quizQuestions.length + '</strong> ข้อ (เกณฑ์ผ่าน 12 ข้อ)</p>';
+
+            html += '<div style="background: #f7fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; max-height: 300px; overflow-y: auto;">';
+            html += '<h4 style="margin-bottom: 15px;">📋 สรุปผลการทดสอบ:</h4>';
+            results.forEach((r, i) => {
+                const icon = r.isCorrect ? '✅' : '❌';
+                const color = r.isCorrect ? '#48bb78' : '#f56565';
+                html += '<div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid ' + color + ';">';
+                html += '<p style="font-weight: 600;">' + icon + ' ข้อ ' + (i + 1) + ': ' + r.question + '</p>';
+                html += '<p style="margin: 5px 0; color: #666;">คำตอบของคุณ: ' + r.yourAnswer + '</p>';
+                if (!r.isCorrect) {
+                    html += '<p style="color: #48bb78;">คำตอบที่ถูกต้อง: ' + r.correctAnswer + '</p>';
+                }
+                html += '</div>';
+            });
+            html += '</div>';
+
+            if (isPass) {
+                html += '<button class="btn btn-success" style="width: 100%;" onclick="window.location.href=\'survey.html\'">ดำเนินการต่อ - กรอกแบบสอบถาม</button>';
+            } else {
+                html += '<button class="btn" style="width: 100%;" onclick="retakeQuiz()">ทำแบบทดสอบใหม่อีกครั้ง</button>';
+            }
+            document.getElementById('quizResult').innerHTML = html;
+            document.getElementById('quizResult').classList.remove('hidden');
+        }
+
+        function retakeQuiz() {
+            quizAnswers = {};
+            document.getElementById('quizContent').classList.remove('hidden');
+            document.getElementById('quizResult').classList.add('hidden');
+            renderQuiz();
+        }
+
+        renderQuiz();
+    </script>
+</body>
+
+</html>
